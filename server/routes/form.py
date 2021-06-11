@@ -3,7 +3,10 @@ from fastapi.encoders import jsonable_encoder
 
 from server.database import(
     add_form,
-    retrieve_all_form
+    retrieve_all_form,
+    retrieve_form_by_id,
+    update_form,
+    delete_form,
 )
 from server.models.form import(
     ErrorResponseModel,
@@ -23,6 +26,32 @@ async def add_form_data(form: FormSchema):
 
 
 @router.get("/RetrieveAllForms", response_description="retrieve all form data")
-async def retrieve_all_form_data():
+async def get_all_form():
     allForms = await retrieve_all_form()
     return ResponseModel(allForms, "All form successfully retrieved")
+
+
+@router.get("/RetrieveFormById/{id}", response_description="retrive form by id")
+async def get_form_by_id(id):
+    form = await retrieve_form_by_id(id)
+    if form is not None:
+        return ResponseModel(form, "form retrieved successfully")
+    return ErrorResponseModel("An error occured.", 404, "Form does not exist")
+
+
+@router.put("/UpdateForm/{id}", response_description="update form")
+async def update_form_by_id(id, req: UpdateFormModel = Body(...)):
+    form = await update_form(id, req)
+    if form:
+        return ResponseModel("form with ID:{} has been updated".format(id), "form updated successfully")
+    return ErrorResponseModel("An error occured", 404, "Updating Error")
+
+
+@router.delete("/DeleteForm/{id}", response_description="Delete Form")
+async def delete_form_by_id(id: str):
+    delete = await delete_form(id)
+    if delete:
+        return ResponseModel("form with ID:{} is deleted".format(id), "form deleted successfully")
+    return ErrorResponseModel(
+        "An error occured", 404, "form with id {} doesn't exist".format(id)
+    )

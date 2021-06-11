@@ -68,6 +68,12 @@ class UpdateFormModel(BaseModel):
     collatetional: Optional[str]
     collateralValue: Optional[float]
 
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {
+            ObjectId: str
+        }
+
 
 def ResponseModel(data, message):
     return {
