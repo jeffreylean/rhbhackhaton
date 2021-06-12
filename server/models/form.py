@@ -61,6 +61,7 @@ class UpdateFormModel(BaseModel):
     applicationType: Optional[str]
     loanAmount: Optional[float]
     loanTerm: Optional[int]
+    interestRate: Optional[int]
     companyName: Optional[str]
     coreBusinessType: Optional[str]
     staffNumber: Optional[int]

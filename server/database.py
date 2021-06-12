@@ -53,3 +53,13 @@ async def delete_form(id: str):
     if(form := collection.find_one({"_id": ObjectId(id)})) is not None:
         await collection.delete_one({"_id": ObjectId(id)})
         return True
+
+
+async def delete_forms(ids: list):
+    if len(ids) > 0:
+        for count, value in enumerate(ids):
+            ids[count] = ObjectId(value)
+        collection.delete_many({"_id": {"$in": ids}})
+        form = collection.find({"_id": {"$in": ids}})
+        if form:
+            return True

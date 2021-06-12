@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 import pickle
+from typing import List
 
 from server.database import(
     add_form,
@@ -8,6 +9,7 @@ from server.database import(
     retrieve_form_by_id,
     update_form,
     delete_form,
+    delete_forms,
 )
 from server.models.form import(
     ErrorResponseModel,
@@ -44,7 +46,7 @@ async def get_form_by_id(id):
 async def update_form_by_id(id, req: UpdateFormModel = Body(...)):
     form = await update_form(id, req)
     if form:
-        return ResponseModel("form with ID:{} has been updated".format(id), "form updated successfully")
+        return ResponseModel(form, "form updated successfully")
     return ErrorResponseModel("An error occured", 404, "Updating Error")
 
 
@@ -58,12 +60,20 @@ async def delete_form_by_id(id: str):
     )
 
 
+@router.post("/DeleteForms", response_description="Delete Form")
+async def delete_form_by_ids(ids: List[str]):
+    delete = await delete_forms(ids)
+    if delete:
+        return ResponseModel("", "forms deleted successfully")
+    return ErrorResponseModel("An error occured", 404, "form doest not exist")
+
+
 @router.get("/Predict/{id}", response_description="Predict credit scoring on each form")
 async def predict_credit_score(id: str):
     model = pickle.load(open("finalized_model.pkl", "rb"))
     form = await retrieve_form_by_id(id)
     form = form["form"]
     if form:
-        pred_name = model.predict([[1, 1,
-                                  form.staffNumber, form.loanTerm, 1, form.collateralValue]])
+        pred_name = model.predict(
+            [[5000, 4000, 1, 5, 20, 8, 2, 7000, 4, 10000]]).tolist()
         return ResponseModel("Credit score of form ID:{} has been predicted.\n The value is {}".format(id, pred_name[0]), "Credit Predict Successfully")
