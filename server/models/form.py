@@ -28,7 +28,7 @@ class FormSchema(BaseModel):
     email: EmailStr = Field(...)
     correspondenceAddress: str = Field(...)
     businessAddress: str = Field(...)
-    loanStatus: str = Field(...)
+    loanStatus: Optional[str]
     applicationType: str = Field(...)
     loanAmount: float = Field(...)
     loanTerm: int = Field(...)
