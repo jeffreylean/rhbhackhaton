@@ -9,6 +9,7 @@ fastapi = "*"
 pymongo = "*"
 motor = "*"
 sklearn = "*"
+pandas = "*"
 
 [dev-packages]
 

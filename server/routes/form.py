@@ -17,6 +17,7 @@ from server.models.form import(
     FormSchema,
     UpdateFormModel,
 )
+from server.utility import vectorize
 
 
 router = APIRouter()
@@ -74,6 +75,8 @@ async def predict_credit_score(id: str):
     form = await retrieve_form_by_id(id)
     form = form["form"]
     if form:
+        vectorized_value = vectorize([[form.currBankAccBalance, form.totalOutstandingLoan, form.premiseType, form.coreBusinessType,
+                                     form.staffNumber, form.loanTerm, form.collateralType, form.collateralValue, form.interestRate, form.installment]])
         pred_name = model.predict(
-            [[5000, 4000, 1, 5, 20, 8, 2, 7000, 4, 10000]]).tolist()
+            vectorized_value).tolist()
         return ResponseModel("Credit score of form ID:{} has been predicted.\n The value is {}".format(id, pred_name[0]), "Credit Predict Successfully")

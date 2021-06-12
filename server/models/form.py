@@ -42,6 +42,8 @@ class FormSchema(BaseModel):
     collateralValue: float = Field(...)
     currBankAccBalance: float = Field(...)
     totalOutstandingLoan: float = Field(...)
+    installment: float = Field(...)
+    formStatus: str = Field(...)
 
     class Config:
         arbitrary_types_allowed = True
@@ -71,6 +73,8 @@ class UpdateFormModel(BaseModel):
     collateralValue: Optional[float]
     currBankAccBalance: Optional[float]
     totalOutstandingLoan: Optional[float]
+    installment: Optional[float]
+    formStatus: Optional[str]
 
     class Config:
         arbitrary_types_allowed = True
