@@ -29,10 +29,10 @@ class FormSchema(BaseModel):
     correspondenceAddress: str = Field(...)
     businessAddress: str = Field(...)
     loanStatus: str = Field(...)
-    amount: float = Field(...)
     applicationType: str = Field(...)
     loanAmount: float = Field(...)
     loanTerm: int = Field(...)
+    interestRate: float = Field(...)
     companyName: str = Field(...)
     coreBusinessType: str = Field(...)
     staffNumber: int = Field(...)
@@ -40,6 +40,8 @@ class FormSchema(BaseModel):
     premiseType: str = Field(...)
     collateralType: str = Field(...)
     collateralValue: float = Field(...)
+    currBankAccBalance: float = Field(...)
+    totalOutstandingLoan: float = Field(...)
 
     class Config:
         arbitrary_types_allowed = True
@@ -56,7 +58,6 @@ class UpdateFormModel(BaseModel):
     correspondenceAddress: Optional[str]
     businessAddress: Optional[str]
     loanStatus: Optional[str]
-    amount: Optional[float]
     applicationType: Optional[str]
     loanAmount: Optional[float]
     loanTerm: Optional[int]
@@ -67,6 +68,8 @@ class UpdateFormModel(BaseModel):
     premiseType: Optional[str]
     collatetional: Optional[str]
     collateralValue: Optional[float]
+    currBankAccBalance: Optional[float]
+    totalOutstandingLoan: Optional[float]
 
     class Config:
         arbitrary_types_allowed = True

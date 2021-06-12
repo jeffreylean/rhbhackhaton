@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
+import pickle
 
 from server.database import(
     add_form,
@@ -34,7 +35,7 @@ async def get_all_form():
 @router.get("/RetrieveFormById/{id}", response_description="retrive form by id")
 async def get_form_by_id(id):
     form = await retrieve_form_by_id(id)
-    if form is not None:
+    if form:
         return ResponseModel(form, "form retrieved successfully")
     return ErrorResponseModel("An error occured.", 404, "Form does not exist")
 
@@ -55,3 +56,14 @@ async def delete_form_by_id(id: str):
     return ErrorResponseModel(
         "An error occured", 404, "form with id {} doesn't exist".format(id)
     )
+
+
+@router.get("/Predict/{id}", response_description="Predict credit scoring on each form")
+async def predict_credit_score(id: str):
+    model = pickle.load(open("finalized_model.pkl", "rb"))
+    form = await retrieve_form_by_id(id)
+    form = form["form"]
+    if form:
+        pred_name = model.predict([[1, 1,
+                                  form.staffNumber, form.loanTerm, 1, form.collateralValue]])
+        return ResponseModel("Credit score of form ID:{} has been predicted.\n The value is {}".format(id, pred_name[0]), "Credit Predict Successfully")

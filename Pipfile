@@ -8,6 +8,7 @@ uvicorn = "*"
 fastapi = "*"
 pymongo = "*"
 motor = "*"
+sklearn = "*"
 
 [dev-packages]
 

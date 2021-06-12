@@ -13,7 +13,3 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-@app.get("/", tags=["Root"])
-async def read_root():
-    return {"message": "welcome"}
