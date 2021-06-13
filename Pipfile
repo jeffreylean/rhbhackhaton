@@ -10,6 +10,7 @@ pymongo = "*"
 motor = "*"
 sklearn = "*"
 pandas = "*"
+xlrd = "*"
 
 [dev-packages]
 

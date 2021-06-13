@@ -1,4 +1,4 @@
-from server.models.form import(
+from server.models.form import (
     FormSchema,
     UpdateFormModel,
 )
@@ -45,12 +45,12 @@ async def update_form(id: str, form: UpdateFormModel):
             if form:
                 return form
 
-    if(existing := collection.find_one({"_id": ObjectId(id)})) is not None:
+    if (existing := collection.find_one({"_id": ObjectId(id)})) is not None:
         return existing
 
 
 async def delete_form(id: str):
-    if(form := collection.find_one({"_id": ObjectId(id)})) is not None:
+    if (form := collection.find_one({"_id": ObjectId(id)})) is not None:
         await collection.delete_one({"_id": ObjectId(id)})
         return True
 

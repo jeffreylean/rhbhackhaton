@@ -1,9 +1,10 @@
+import pandas
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 import pickle
 from typing import List
 
-from server.database import(
+from server.database import (
     add_form,
     retrieve_all_form,
     retrieve_form_by_id,
@@ -11,13 +12,13 @@ from server.database import(
     delete_form,
     delete_forms,
 )
-from server.models.form import(
+from server.models.form import (
     ErrorResponseModel,
     ResponseModel,
     FormSchema,
     UpdateFormModel,
 )
-from server.utility import vectorize
+from server.utility import vectorize, calculate_score
 
 
 router = APIRouter()
@@ -55,7 +56,9 @@ async def update_form_by_id(id, req: UpdateFormModel = Body(...)):
 async def delete_form_by_id(id: str):
     delete = await delete_form(id)
     if delete:
-        return ResponseModel("form with ID:{} is deleted".format(id), "form deleted successfully")
+        return ResponseModel(
+            "form with ID:{} is deleted".format(id), "form deleted successfully"
+        )
     return ErrorResponseModel(
         "An error occured", 404, "form with id {} doesn't exist".format(id)
     )
@@ -71,12 +74,39 @@ async def delete_form_by_ids(ids: List[str]):
 
 @router.get("/Predict/{id}", response_description="Predict credit scoring on each form")
 async def predict_credit_score(id: str):
-    model = pickle.load(open("finalized_model.pkl", "rb"))
+    loanPredictModel = pickle.load(open("loanpredict_model.pkl", "rb"))
+    interestPredictModel = pickle.load(open("interestpredict_model.pkl", "rb"))
     form = await retrieve_form_by_id(id)
     form = form["form"]
     if form:
-        vectorized_value = vectorize([[form.currBankAccBalance, form.totalOutstandingLoan, form.premiseType, form.coreBusinessType,
-                                     form.staffNumber, form.loanTerm, form.collateralType, form.collateralValue, form.interestRate, form.installment]])
-        pred_name = model.predict(
-            vectorized_value).tolist()
-        return ResponseModel("Credit score of form ID:{} has been predicted.\n The value is {}".format(id, pred_name[0]), "Credit Predict Successfully")
+        vectorized_value = vectorize(
+            [
+                [
+                    form.currBankAccBalance,
+                    form.totalOutstandingLoan,
+                    form.premiseType,
+                    form.coreBusinessType,
+                    form.staffNumber,
+                    form.loanTerm,
+                    form.collateralType,
+                    form.collateralValue,
+                    form.installment,
+                ]
+            ]
+        )
+        loanResult = loanPredictModel.predict(vectorized_value).tolist()
+        interestResult = interestPredictModel.predict(vectorized_value).tolist()
+    df = pandas.read_csv("pedata.csv")
+    peg = df[df["Industry Name"] == form.coreBusinessType]["PEG Ratio"]
+    marketTrend = df[df["Industry Name"] == form.coreBusinessType][
+        "Expected growth - next 5 years"
+    ]
+    peg = float(peg)
+    marketTrend = str(marketTrend.loc[0]).replace("%", "")
+    marketTrend = float(marketTrend)
+    loanAmount = form.loanAmount
+    final_score = calculate_score(
+        loanResult[0], peg, form.interestRate, marketTrend, loanAmount
+    )
+    result = [loanResult[0], interestResult[0], final_score]
+    return ResponseModel(result, "Credit Predict Successfully")
