@@ -97,16 +97,14 @@ async def predict_credit_score(id: str):
         loanResult = loanPredictModel.predict(vectorized_value).tolist()
         interestResult = interestPredictModel.predict(vectorized_value).tolist()
     df = pandas.read_csv("pedata.csv")
-    peg = df[df["Industry Name"] == form.coreBusinessType]["PEG Ratio"]
     marketTrend = df[df["Industry Name"] == form.coreBusinessType][
         "Expected growth - next 5 years"
     ]
-    peg = float(peg)
     marketTrend = str(marketTrend.loc[0]).replace("%", "")
     marketTrend = float(marketTrend)
     loanAmount = form.loanAmount
     final_score = calculate_score(
-        loanResult[0], peg, form.interestRate, marketTrend, loanAmount
+        loanResult[0], form.interestRate, marketTrend, loanAmount
     )
     result = [loanResult[0], interestResult[0], final_score]
     return ResponseModel(result, "Credit Predict Successfully")
