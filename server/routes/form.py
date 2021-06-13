@@ -100,7 +100,8 @@ async def predict_credit_score(id: str):
     marketTrend = df[df["Industry Name"] == form.coreBusinessType][
         "Expected growth - next 5 years"
     ]
-    marketTrend = str(marketTrend.loc[0]).replace("%", "")
+    print(marketTrend)
+    marketTrend = str(marketTrend.values[0]).replace("%", "")
     marketTrend = float(marketTrend)
     loanAmount = form.loanAmount
     final_score = calculate_score(
