@@ -72,12 +72,13 @@ async def delete_form_by_ids(ids: List[str]):
     return ErrorResponseModel("An error occured", 404, "form doest not exist")
 
 
-@router.get("/Predict/{id}", response_description="Predict credit scoring on each form")
-async def predict_credit_score(id: str):
+@router.post(
+    "/Predict/{id}", response_description="Predict credit scoring on each form"
+)
+async def predict_credit_score(id: str, req: UpdateFormModel = Body(...)):
     loanPredictModel = pickle.load(open("loanpredict_model.pkl", "rb"))
     interestPredictModel = pickle.load(open("interestpredict_model.pkl", "rb"))
-    form = await retrieve_form_by_id(id)
-    form = form["form"]
+    form = await update_form(id, req)
     if form:
         vectorized_value = vectorize(
             [
