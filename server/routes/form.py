@@ -106,9 +106,5 @@ async def predict_credit_score(id: str):
     final_score = calculate_score(
         loanResult[0], form.interestRate, marketTrend, loanAmount
     )
-    print(final_score)
-    form.predCreditScore = final_score
-    form.predLoanStatus = loanResult[0]
-    await update_form(form.id, form)
     result = [loanResult[0], interestResult[0], final_score]
     return ResponseModel(result, "Credit Predict Successfully")
