@@ -44,6 +44,7 @@ class FormSchema(BaseModel):
     installment: float = Field(...)
     formStatus: str = Field(...)
     creditScore: Optional[float]
+    predLoanStatus: Optional[str]
 
     class Config:
         arbitrary_types_allowed = True
@@ -74,6 +75,7 @@ class UpdateFormModel(BaseModel):
     installment: Optional[float]
     formStatus: Optional[str]
     creditScore: Optional[float]
+    predLoanStatus: Optional[str]
 
     class Config:
         arbitrary_types_allowed = True
