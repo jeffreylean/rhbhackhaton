@@ -68,7 +68,7 @@ class UpdateFormModel(BaseModel):
     staffNumber: Optional[int]
     lastTotalSales: Optional[float]
     premiseType: Optional[str]
-    collatetional: Optional[str]
+    collateralType: Optional[str]
     collateralValue: Optional[float]
     currBankAccBalance: Optional[float]
     totalOutstandingLoan: Optional[float]

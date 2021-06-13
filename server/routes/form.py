@@ -78,8 +78,8 @@ async def delete_form_by_ids(ids: List[str]):
 async def predict_credit_score(id: str, req: UpdateFormModel = Body(...)):
     loanPredictModel = pickle.load(open("loanpredict_model.pkl", "rb"))
     interestPredictModel = pickle.load(open("interestpredict_model.pkl", "rb"))
-    form = await update_form(id, req)
-    if form:
+    form = req
+    if req:
         vectorized_value = vectorize(
             [
                 [
