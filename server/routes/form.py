@@ -107,7 +107,7 @@ async def predict_credit_score(id: str):
         loanResult[0], form.interestRate, marketTrend, loanAmount
     )
     print(final_score)
-    form.creditScore = final_score
+    form.predCreditScore = final_score
     form.predLoanStatus = loanResult[0]
     await update_form(form.id, form)
     result = [loanResult[0], interestResult[0], final_score]

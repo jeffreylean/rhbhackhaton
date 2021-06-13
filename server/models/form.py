@@ -43,7 +43,7 @@ class FormSchema(BaseModel):
     totalOutstandingLoan: float = Field(...)
     installment: float = Field(...)
     formStatus: str = Field(...)
-    creditScore: Optional[float]
+    predCreditScore: Optional[float]
     predLoanStatus: Optional[str]
 
     class Config:
@@ -74,7 +74,7 @@ class UpdateFormModel(BaseModel):
     totalOutstandingLoan: Optional[float]
     installment: Optional[float]
     formStatus: Optional[str]
-    creditScore: Optional[float]
+    predCreditScore: Optional[float]
     predLoanStatus: Optional[str]
 
     class Config:
