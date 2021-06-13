@@ -100,12 +100,14 @@ async def predict_credit_score(id: str):
     marketTrend = df[df["Industry Name"] == form.coreBusinessType][
         "Expected growth - next 5 years"
     ]
-    print(marketTrend)
     marketTrend = str(marketTrend.values[0]).replace("%", "")
     marketTrend = float(marketTrend)
     loanAmount = form.loanAmount
     final_score = calculate_score(
         loanResult[0], form.interestRate, marketTrend, loanAmount
     )
+    print(final_score)
+    form.creditScore = final_score
+    await update_form(form.id, form)
     result = [loanResult[0], interestResult[0], final_score]
     return ResponseModel(result, "Credit Predict Successfully")

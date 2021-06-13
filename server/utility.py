@@ -62,17 +62,12 @@ def calculate_score(loandefaultpred, interest_rate, market_trend, loan_amount):
     else:
         predpercentage = (amount_risk / 50) * 100
 
-    if interest_rate > 25:
+    if interest_rate > 13:
         interestrisk = 100
-    elif interest_rate > 20 and interest_rate <= 25:
+    elif interest_rate > 9 and interest_rate <= 13:
         interestrisk = 75
     else:
         interestrisk = (amount_risk / 50) * 100
 
-    if market_trend > 50:
-        marketrisk = (amount_risk / 50) * 100
-    elif market_trend <= 50:
-        marketrisk = 60
-
-    finalscore = (predpercentage / 60) + ((loanrisk + interestrisk + marketrisk) / 40)
+    finalscore = (predpercentage / 60) + ((loanrisk + interestrisk + market_trend) / 40)
     return finalscore
