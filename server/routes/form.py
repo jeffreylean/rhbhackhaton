@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 import pickle
 from typing import List
 
-from server.database import (
+from server.repository.form_repository import (
     add_form,
     retrieve_all_form,
     retrieve_form_by_id,
