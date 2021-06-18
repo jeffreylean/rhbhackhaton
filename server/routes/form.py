@@ -19,6 +19,9 @@ from server.models.form import (
     UpdateFormModel,
 )
 from server.utility import vectorize, calculate_score
+from server.repository.model_configuration_repository import (
+    retrieve_configuration_by_id,
+)
 
 
 router = APIRouter()
@@ -75,9 +78,12 @@ async def delete_form_by_ids(ids: List[str]):
 @router.post(
     "/Predict/{id}", response_description="Predict credit scoring on each form"
 )
-async def predict_credit_score(id: str, req: UpdateFormModel = Body(...)):
+async def predict_credit_score(
+    id: str, configId: str, req: UpdateFormModel = Body(...)
+):
     loanPredictModel = pickle.load(open("loanpredict_model.pkl", "rb"))
     interestPredictModel = pickle.load(open("interestpredict_model.pkl", "rb"))
+    configuration = await retrieve_configuration_by_id(configId)
     form = req
     if req:
         vectorized_value = vectorize(
@@ -105,7 +111,7 @@ async def predict_credit_score(id: str, req: UpdateFormModel = Body(...)):
     marketTrend = float(marketTrend)
     loanAmount = form.loanAmount
     final_score = calculate_score(
-        loanResult[0], form.interestRate, marketTrend, loanAmount
+        loanResult[0], form.interestRate, marketTrend, loanAmount, configuration
     )
     result = [loanResult[0], interestResult[0], final_score]
     return ResponseModel(result, "Credit Predict Successfully")

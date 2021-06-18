@@ -46,7 +46,9 @@ def vectorize(inputArray):
     return processedinputs
 
 
-def calculate_score(loandefaultpred, interest_rate, market_trend, loan_amount):
+def calculate_score(
+    loandefaultpred, interest_rate, market_trend, loan_amount, configuration
+):
     # target loan amount
     max_loan = 2500000
     amount_risk = (loan_amount / max_loan) * 100

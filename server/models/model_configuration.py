@@ -23,6 +23,8 @@ class ModelConfigurationSchema(BaseModel):
     id: Optional[PyObjectId] = Field(alias="_id")
     traditionalModelWeight: float = Field(...)
     mlModelWeight: float = Field(...)
+    individualModel: Optional[bool]
+    marketTrendModel: Optional[bool]
 
     class Config:
         arbitrary_types_allowed = True
@@ -32,6 +34,8 @@ class ModelConfigurationSchema(BaseModel):
 class UpdateModelConfigurationModel(BaseModel):
     traditionalModelWeight: Optional[float]
     mlModelWeight: Optional[float]
+    individualModel: Optional[bool]
+    marketTrendModel: Optional[bool]
 
     class Config:
         arbitrary_types_allowed = True
