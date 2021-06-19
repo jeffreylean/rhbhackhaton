@@ -27,16 +27,26 @@ def vectorize(inputArray):
     )
     data1["Core Business Type"] = data1["Core Business Type"].map(
         {
-            "Retail": 0,
-            "Wholesale": 1,
-            "Construction": 2,
-            "Warehousing": 3,
-            "Information Services": 4,
-            "Transportation": 5,
-            "Accommodation and catering": 6,
-            "Leasing and business services": 7,
-            "Real estate development and management": 8,
-            "Software and information technology": 9,
+            "Commercial Services": 0,
+            "Communications": 1,
+            "Consumer Durables": 2,
+            "Consumer Non-Durables": 3,
+            "Consumer Services": 4,
+            "Distribution Services": 5,
+            "Electronic Technology": 6,
+            "Energy Minerals": 7,
+            "Finance": 8,
+            "Health Services": 9,
+            "Health Technology": 10,
+            "Industrial Services": 11,
+            "Miscellaneous": 12,
+            "Non-Energy Minerals": 13,
+            "Process Industries": 14,
+            "Producer Manufacturing": 15,
+            "Retail Trade": 16,
+            "Technology Services": 17,
+            "Transportation": 18,
+            "Utilities": 19,
         }
     )
     # data1['Loan Status'] = data1['Loan Status'].str[0].str.upper().map(

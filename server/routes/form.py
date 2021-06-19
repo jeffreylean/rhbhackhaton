@@ -3,6 +3,7 @@ from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 import pickle
 from typing import List
+from server.predmarketvalue import VerifyMarket
 
 from server.repository.form_repository import (
     add_form,
@@ -103,12 +104,7 @@ async def predict_credit_score(
         )
         loanResult = loanPredictModel.predict(vectorized_value).tolist()
         interestResult = interestPredictModel.predict(vectorized_value).tolist()
-    df = pandas.read_csv("pedata.csv")
-    marketTrend = df[df["Industry Name"] == form.coreBusinessType][
-        "Expected growth - next 5 years"
-    ]
-    marketTrend = str(marketTrend.values[0]).replace("%", "")
-    marketTrend = float(marketTrend)
+    marketTrend = VerifyMarket(form.coreBusinessType)
     loanAmount = form.loanAmount
     final_score = calculate_score(
         loanResult[0], form.interestRate, marketTrend, loanAmount, configuration
